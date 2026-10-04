@@ -25,7 +25,7 @@
 <dialog id="importDialog" aria-labelledby="importTitle" aria-describedby="importDescription">
 <div class="panel-head"><h2 id="importTitle">匯入明細</h2><button class="close" id="closeImport" aria-label="關閉匯入">×</button></div>
 <p class="hint" id="importDescription">可貼上商品描述、價格與數量；辨識的金額一律視為日幣。每行一項商品，加入後可在清單調整。</p>
-<label for="importText">明細文字</label><textarea id="importText" placeholder="一件uniqlo的內褲，$390&#10;兩盒餅乾，價格未知" spellcheck="false" maxlength="200000"></textarea>
+<label for="importText">明細文字</label><textarea id="importText" placeholder="兩盒東京香蕉，¥1,200&#10;一包京都抹茶粉，¥800&#10;三盒蒸氣眼罩，價格未填" spellcheck="false" maxlength="200000"></textarea>
 <p id="importError" role="alert"></p><div class="dialog-actions"><button class="primary" id="applyImport">加入清單</button></div>
 </dialog>
 <script src="scripts/rates.js"></script><script src="scripts/import-parser.js"></script>
