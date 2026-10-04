@@ -28,10 +28,10 @@
   if(!found)work=work.replace(unknownPattern,'');work=work.replace(/(?:單價|價格|價錢|金額|price)\s*[：:=]?\s*[-—?？]\s*$/i,'');const name=clean(work)||'商品 '+(index+1);return{name,price:p,qty}
  }
  function parse(raw){if(typeof raw!=='string'||raw.length>200000)throw Error('內容太長，請分成較小的清單。');raw=raw.replace(/\r\n?/g,'\n').normalize('NFKC').replace(/，/g,',');if(!raw.trim())throw Error('先貼上商品內容。');const lines=raw.split(/[\n;；]+/).map(s=>s.trim()).filter(Boolean);let buyer='',items=[],header=null;
-  for(let line of lines){line=line.replace(/^(?:[-*•·]\s+|\d+[.)、]\s+)/,'').trim();let m=line.match(/^(?:訂購人(?:姓名)?|購買人|姓名|buyer)\s*[：:=]\s*(.*)$/i);if(m){buyer=m[1].trim();if(['尚未填寫','未填姓名'].includes(buyer))buyer='';continue}
-   if(/^(?:炭寶代購團\s*[|｜]\s*(?:日本購物清單|訂購單)|日本代購小清單|日本代購付款明細|商品明細|商品清單|訂購單|訂購清單|訂購單预览|訂購單預覽)$/.test(line))continue;
+  for(let line of lines){line=line.replace(/^(?:[-*•·]\s+|[・※]\s*|\d+[.)、]\s+)/,'').trim();if(/^【.*】$/.test(line))line=line.slice(1,-1).trim();let m=line.match(/^(?:訂購人(?:姓名)?|購買人|姓名|buyer)\s*[：:=]\s*(.*)$/i);if(m){buyer=m[1].trim();if(['尚未填寫','未填姓名'].includes(buyer))buyer='';continue}
+   if(/^(?:炭寶(?:代購|購物)團\s*[|｜]\s*(?:日本購物清單|訂購單)|日本代購小清單|日本代購付款明細|商品明細|商品清單|金額合計|訂購單|訂購清單|訂購單预览|訂購單預覽)$/.test(line))continue;
    if(/^(?:日幣加總|日幣總計|日幣合計|日幣含稅總額|換算台幣|要給\s*Amy\s*的錢|清單金額|最後需支付|採用匯率)\s*[：:]/i.test(line))continue;
-   if(/^(?:[（(]?請注意[!！]|付款可使用|日幣[\/／]台幣皆可|合計後取最接近|金額已四捨五入|匯率已含代購報酬)/.test(line))continue;
+   if(/^(?:[（(]?請注意[!！]|還有\s*\d+\s*項商品待補價格|付款可使用|日幣[\/／]台幣皆可|合計後取最接近|金額已四捨五入|匯率已含代購報酬)/.test(line))continue;
    const cells=fields(line),nameIndex=cells.findIndex(c=>/^(?:商品(?:名稱|名)?|品名|名稱|name)$/i.test(c)),priceIndex=cells.findIndex(c=>/^(?:價格|單價|含稅單價|日幣單價|金額|price)$/i.test(c));if(nameIndex>=0&&priceIndex>=0){const q=cells.findIndex(c=>/^(?:數量|qty|quantity)$/i.test(c));header={name:nameIndex,price:priceIndex,qty:q>=0?q:null};continue}
    const item=parseLine(line,items.length,header);if(item.name.length>500)throw Error('商品描述太長，請分行貼上。');items.push(item);if(items.length>1000)throw Error('一份清單最多 1,000 項商品。')
   }
